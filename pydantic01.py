@@ -64,6 +64,16 @@ def sjone(name: str):
             findone = sj
     return findone
 
+# 성적데이터 삭제  - 이름으로 조회
+@app.delete('/sj/{name}',response_model=Sungjuk)
+def sjrmv(name: str):
+    rmvone = Sungjuk(name='none',kor=00,eng=00,mat=00)
+    for idx, sj in enumerate(sungjuk_db):
+        if sj.name == name:
+            rmvone = sungjuk_db.pop(idx)
+    return rmvone
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run('pydantic01:app', reload=True)
