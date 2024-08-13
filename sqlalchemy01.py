@@ -72,17 +72,26 @@ def sjadd(sj: SungjukModel, db: Session = Depends(get_db)):
                              # pydantic으로 유효성 검사 후 sqlalchemy 객체로 변환
     # py : Sungjuk(name=?, kor=?, eng=?, mat=?)
     # sa : Sungjuk(sj['name'], sj['kor'], sj['eng'], sj['mat'])
-
     db.add(sj)
     db.commit()
     db.refresh(sj)
     return sj
 
-# 성적 상세 조회 - 학생번호
+# 성적 상세 조회 - 학생번호로 조회
 @app.get('/sj/{sjno}', response_model=Optional[SungjukModel])
+def readone_sj(sjno: int, db: Session = Depends(get_db)):
+    sungjuk = db.query(Sungjuk).filter(Sungjuk.sjno == sjno).first()
+    return sungjuk
+
+# 성적 삭제 - 학생번호로 조회
+# 먼저, 삭제할 학생 데이터가 있는지 확인한 후 삭제 실행
+@app.delete('/sj/{sjno}', response_model=Optional[SungjukModel])
 def read_sj(sjno: int, db: Session = Depends(get_db)):
-    sungjuks = db.query(Sungjuk).filter(Sungjuk.sjno == sjno).first()
-    return sungjuks
+    sungjuk = db.query(Sungjuk).filter(Sungjuk.sjno == sjno).first()
+    if sungjuk:
+        db.delete(sungjuk)
+        db.commit()
+    return sungjuk
 
 if __name__ == "__main__":
     import uvicorn
