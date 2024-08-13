@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import FastAPI
 from fastapi.params import Depends
@@ -77,6 +77,12 @@ def sjadd(sj: SungjukModel, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(sj)
     return sj
+
+# 성적 상세 조회 - 학생번호
+@app.get('/sj/{sjno}', response_model=Optional[SungjukModel])
+def read_sj(sjno: int, db: Session = Depends(get_db)):
+    sungjuks = db.query(Sungjuk).filter(Sungjuk.sjno == sjno).first()
+    return sungjuks
 
 if __name__ == "__main__":
     import uvicorn
