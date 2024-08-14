@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>우편번호 검색 결과</title>
+</head>
+<body>
+    <h1>{{ sayhello }}</h1>
+    <h2>우편번호 검색 결과</h2>
+    <ul>
+    {% for row in rows  %}
+        <li>{{ row.zipcode }} {{ row.sido }} {{ row.gugun }}
+            {{ row.dong }} {{ row.ri }} {{ row.bunji }}</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
