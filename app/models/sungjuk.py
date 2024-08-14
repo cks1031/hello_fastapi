@@ -12,4 +12,4 @@ class Sungjuk(Base):
     kor = Column(Integer)
     eng = Column(Integer)
     mat = Column(Integer)
-    mat = Column(DateTime, default=datetime.now)
+    regdate = Column(DateTime, default=datetime.now)
