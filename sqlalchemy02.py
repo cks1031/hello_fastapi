@@ -41,12 +41,14 @@ def get_db():
         db.close() # 데이터베이스 세션 닫음 (DB 연결해제, 리소스 반환)
 
 # pydantic 모델
-class MemberModel(BaseModel):
-    mno : int
+class NewMemberModel(BaseModel):
     userid : str
     passwd : str
     name : str
     email : str
+
+class MemberModel(NewMemberModel):
+    mno : int
     regdate : datetime
 
 # FastAPI 메인
@@ -64,14 +66,15 @@ def read_member(db: Session = Depends(get_db)):
     return members
 
 # 회원 추가
-@app.post('/member', response_model=MemberModel)
-def add_member(mb: MemberModel, db: Session = Depends(get_db)):
+# @app.post('/member', response_model=NewMemberModel)
+@app.post('/member', response_model=str)
+def add_member(mb: NewMemberModel, db: Session = Depends(get_db)):
     mb = Member(**dict(mb))
     db.add(mb)
     db.commit()
     db.refresh(mb)
-    return mb
-
+    # return mb
+    return '데이터 입력 성공!!'
 # 회원 상세 조회 - 회원번호로 조회
 @app.get('/member/{mno}', response_model=Optional[MemberModel])
 def readone_member(mno: int, db: Session = Depends(get_db)):
